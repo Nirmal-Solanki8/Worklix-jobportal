@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Contact - Worklix" }) %>
+  <link rel="stylesheet" href="/css/contact.css">
+</head>
+
+<body>
+  <%- include("partials/navbar") %>
+
+  <section class="contact-page">
+
+    <div class="contact-card">
+
+      <!-- LEFT -->
+      <div class="contact-left">
+        <span class="contact-badge">CONTACT WORKLIX</span>
+
+        <h1>We’d love to hear from you</h1>
+
+        <p class="contact-desc">
+          Whether you have a question, feedback, or need help with hiring —
+          our team is ready to assist you quickly and professionally.
+        </p>
+
+        <div class="contact-info">
+          <div class="info-item">
+            <span>📧</span>
+            <p>support@worklix.com</p>
+          </div>
+
+          <div class="info-item">
+            <span>📞</span>
+            <p>+91 90000 00000</p>
+          </div>
+
+          <div class="info-item">
+            <span>📍</span>
+            <p>Surat, Gujarat, India</p>
+          </div>
+        </div>
+
+        <div class="contact-highlight">
+          <p>⚡ Avg. response time: <strong>Under 24 hours</strong></p>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="contact-right">
+
+        <h2>Send us a message</h2>
+
+        <form class="contact-form" action="/contact" method="POST">
+
+          <div class="contact-field">
+            <label for="contact-name">Full name</label>
+            <input id="contact-name" type="text" name="name" required autocomplete="name" placeholder="Your name" />
+          </div>
+
+          <div class="contact-field">
+            <label for="contact-email">Email</label>
+            <input id="contact-email" type="email" name="email" required autocomplete="email" placeholder="you@example.com" />
+          </div>
+
+          <div class="contact-field">
+            <label for="contact-subject">Subject <span class="contact-optional">(optional)</span></label>
+            <input id="contact-subject" type="text" name="subject" autocomplete="off" placeholder="What is this about?" />
+          </div>
+
+          <div class="contact-field">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" name="message" required rows="5" placeholder="Tell us more…"></textarea>
+          </div>
+
+          <button type="submit" class="contact-btn">
+            Send message
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <%- include("partials/footer") %>
+</body>
+</html>

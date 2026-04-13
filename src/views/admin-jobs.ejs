@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Admin Jobs - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+  <div class="container dashboard-page">
+    <h1>Manage Jobs</h1>
+    <p class="dashboard-subtitle">Review all posted jobs and track recruiter ownership and status.</p>
+    <% if (jobs && jobs.length > 0) { %>
+      <% jobs.forEach(job => { %>
+        <div class="job-card">
+          <h3><%= job.title %></h3>
+          <p><%= job.company %> - <%= job.location %></p>
+          <p>Recruiter: <%= job.recruiter ? job.recruiter.name : "-" %></p>
+          <p>Status: <%= job.status %></p>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No jobs found.</p>
+    <% } %>
+  </div>
+  <%- include("partials/footer") %>
+</body>
+</html>

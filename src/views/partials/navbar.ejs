@@ -1,0 +1,224 @@
+<header class="navbar-wrapper">
+  <div class="navbar">
+    <a href="/" class="brand">
+      <img src="/images/Worklix.png" alt="Worklix Logo" class="brand-logo" />
+      <span class="brand-text">Worklix</span>
+    </a>
+
+    <button
+      type="button"
+      class="nav-menu-toggle"
+      id="nav-menu-toggle"
+      aria-controls="primary-navigation"
+      aria-expanded="false"
+      aria-label="Open menu"
+    >
+      <span class="nav-menu-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+
+    <nav class="nav-links" id="primary-navigation" aria-label="Main">
+      <a href="/">Home</a>
+      <a href="/jobs">Find Jobs</a>
+      <a href="/companies">Companies</a>
+      <a href="/about">About Us</a>
+      <a href="/contact">Contact</a>
+      <% if (currentUser && currentUser.role === "jobseeker") { %>
+        <a href="/dashboard/jobseeker">My Dashboard</a>
+      <% } %>
+      <% if (currentUser && (currentUser.role === "employer" || currentUser.role === "admin")) { %>
+        <a href="/dashboard/employer">Recruiter Dashboard</a>
+      <% } %>
+      <% if (currentUser && currentUser.role === "admin") { %>
+        <a href="/dashboard/admin">Admin</a>
+      <% } %>
+    </nav>
+
+    <div class="nav-actions">
+      <% if (!currentUser) { %>
+        <button
+          type="button"
+          class="signin-btn nav-auth-trigger"
+          id="nav-auth-trigger"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+          aria-controls="nav-auth-dialog"
+        >
+          Sign In
+        </button>
+      <% } else { %>
+        <div class="nav-user-cluster">
+          <a href="/profile" class="nav-user-greeting">Hi, <%= currentUser.name %></a>
+          <form class="nav-logout-form" action="/auth/logout" method="post">
+            <button class="recruiter-btn" type="submit">Logout</button>
+          </form>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <% if (!currentUser) { %>
+  <div
+    class="nav-auth-overlay"
+    id="nav-auth-overlay"
+    aria-hidden="true"
+  >
+    <div class="nav-auth-scrim" data-nav-auth-dismiss tabindex="-1"></div>
+    <div
+      class="nav-auth-modal"
+      id="nav-auth-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="nav-auth-heading"
+    >
+      <div class="nav-auth-modal-inner">
+        <p class="auth-card-eyebrow">Account</p>
+        <h2 id="nav-auth-heading" class="nav-auth-heading">Welcome back</h2>
+        <p class="nav-auth-sub">Sign in to continue on Worklix</p>
+        <form class="nav-auth-form" action="/auth/login" method="post">
+          <label class="nav-auth-label">
+            <span class="nav-auth-label-text">Email</span>
+            <input type="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+          </label>
+          <label class="nav-auth-label">
+            <span class="nav-auth-label-text">Password</span>
+            <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+          </label>
+          <button type="submit" class="nav-auth-submit">Sign in</button>
+        </form>
+        <div class="nav-auth-footer">
+          <span class="nav-auth-muted">New to Worklix?</span>
+          <a href="/register" class="nav-auth-register">Create an account</a>
+        </div>
+      </div>
+      <button type="button" class="nav-auth-close" aria-label="Close" data-nav-auth-dismiss>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <% } %>
+</header>
+<script>
+  (function () {
+    var toggle = document.getElementById("nav-menu-toggle");
+    var nav = document.getElementById("primary-navigation");
+    var overlay = document.getElementById("nav-auth-overlay");
+    var authTrigger = document.getElementById("nav-auth-trigger");
+    var dialog = document.getElementById("nav-auth-dialog");
+    var closeAuthModal = function () {};
+
+    function setMenuOpen(open) {
+      if (!nav || !toggle) return;
+      nav.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      document.body.classList.toggle("nav-menu-open", open);
+    }
+
+    if (toggle && nav) {
+      toggle.addEventListener("click", function () {
+        setMenuOpen(!nav.classList.contains("is-open"));
+      });
+
+      nav.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          if (window.matchMedia("(max-width: 920px)").matches) {
+            setMenuOpen(false);
+          }
+        });
+      });
+
+      window.addEventListener(
+        "resize",
+        function () {
+          if (!window.matchMedia("(max-width: 920px)").matches) {
+            setMenuOpen(false);
+          }
+        },
+        { passive: true }
+      );
+    }
+
+    if (overlay && authTrigger && dialog) {
+      var dismissSelector = "[data-nav-auth-dismiss]";
+      var previousActive = null;
+
+      function authFocusables() {
+        return dialog.querySelectorAll(
+          'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), input:not([disabled]):not([tabindex="-1"])'
+        );
+      }
+
+      function setAuthOpen(open) {
+        overlay.classList.toggle("is-open", open);
+        overlay.setAttribute("aria-hidden", open ? "false" : "true");
+        authTrigger.setAttribute("aria-expanded", open ? "true" : "false");
+        document.body.classList.toggle("nav-auth-open", open);
+
+        if (open) {
+          previousActive = document.activeElement;
+          window.setTimeout(function () {
+            var first = authFocusables()[0];
+            if (first) first.focus();
+          }, 50);
+        } else if (previousActive && typeof previousActive.focus === "function") {
+          previousActive.focus();
+          previousActive = null;
+        }
+      }
+
+      closeAuthModal = function () {
+        setAuthOpen(false);
+      };
+
+      function authIsOpen() {
+        return overlay.classList.contains("is-open");
+      }
+
+      authTrigger.addEventListener("click", function () {
+        setAuthOpen(!authIsOpen());
+      });
+
+      overlay.addEventListener("click", function (e) {
+        if (e.target.closest(dismissSelector)) setAuthOpen(false);
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (!authIsOpen()) return;
+        if (e.key !== "Tab") return;
+        var nodes = authFocusables();
+        if (!nodes.length) return;
+        var first = nodes[0];
+        var last = nodes[nodes.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
+    }
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") return;
+      if (overlay && overlay.classList.contains("is-open")) {
+        e.preventDefault();
+        closeAuthModal();
+        return;
+      }
+      if (nav && nav.classList.contains("is-open") && toggle) {
+        e.preventDefault();
+        setMenuOpen(false);
+        toggle.focus();
+      }
+    });
+  })();
+</script>

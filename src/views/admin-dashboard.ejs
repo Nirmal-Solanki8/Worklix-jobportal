@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Admin Dashboard - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+  <div class="container dashboard-page">
+    <h1>Admin Dashboard</h1>
+    <p class="dashboard-subtitle">Overview of platform activity and quick links to management tools.</p>
+    <div class="jobs-grid dashboard-stats-grid">
+      <div class="job-card dashboard-stat-card">
+        <h3>Total Users</h3>
+        <p><%= metrics.usersCount %></p>
+      </div>
+      <div class="job-card dashboard-stat-card">
+        <h3>Total Jobs</h3>
+        <p><%= metrics.jobsCount %></p>
+      </div>
+      <div class="job-card dashboard-stat-card">
+        <h3>Total Applications</h3>
+        <p><%= metrics.applicationsCount %></p>
+      </div>
+    </div>
+    <div class="dashboard-actions-row">
+      <a href="/admin/users">Manage Users</a>
+      <a href="/admin/jobs">Manage Jobs</a>
+      <a href="/admin/applications">Manage Applications</a>
+    </div>
+  </div>
+  <%- include("partials/footer") %>
+</body>
+</html>

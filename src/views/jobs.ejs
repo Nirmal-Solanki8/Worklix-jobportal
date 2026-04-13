@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Find Jobs - Worklix", extraCss: "/css/jobs-page.css" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+
+  <section class="jobs-page-section">
+    <div class="container container--wide">
+      <header class="jobs-page-hero">
+        <p class="jobs-page-eyebrow">Find Jobs</p>
+        <h1>Browse open roles</h1>
+        <p class="jobs-page-lead">Filter by type, experience, category, and location. Tap a card for full details and apply.</p>
+      </header>
+
+      <form class="jobs-filters-panel" action="/jobs" method="get" role="search">
+        <div class="jobs-filter-cell jobs-filter-cell--grow">
+          <label class="jobs-filter-label" for="jf-keyword">Search</label>
+          <input
+            id="jf-keyword"
+            type="search"
+            name="keyword"
+            placeholder="Title, company, keywords…"
+            value="<%= keyword || '' %>"
+            autocomplete="off"
+          />
+        </div>
+        <div class="jobs-filter-cell jobs-filter-cell--2">
+          <label class="jobs-filter-label" for="jf-location">Location</label>
+          <input
+            id="jf-location"
+            type="text"
+            name="location"
+            placeholder="City or Remote"
+            value="<%= location || '' %>"
+            <% if (locationSuggestions && locationSuggestions.length) { %>list="jf-loc-list"<% } %>
+            autocomplete="off"
+          />
+          <% if (locationSuggestions && locationSuggestions.length) { %>
+            <datalist id="jf-loc-list">
+              <% locationSuggestions.forEach(function (loc) { %>
+                <option value="<%= loc %>"></option>
+              <% }) %>
+            </datalist>
+          <% } %>
+        </div>
+        <div class="jobs-filter-cell jobs-filter-cell--2">
+          <label class="jobs-filter-label" for="jf-jobtype">Job type</label>
+          <select id="jf-jobtype" name="jobType">
+            <option value="">All types</option>
+            <% (jobTypesList || []).forEach(function (t) { %>
+              <option value="<%= t %>" <%= jobType === t ? "selected" : "" %>><%= t %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="jobs-filter-cell jobs-filter-cell--2">
+          <label class="jobs-filter-label" for="jf-exp">Experience</label>
+          <select id="jf-exp" name="experienceLevel">
+            <option value="">All levels</option>
+            <% (experienceLevelsList || []).forEach(function (t) { %>
+              <option value="<%= t %>" <%= experienceLevel === t ? "selected" : "" %>><%= t %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="jobs-filter-cell jobs-filter-cell--2">
+          <label class="jobs-filter-label" for="jf-cat">Category</label>
+          <select id="jf-cat" name="category">
+            <option value="">All categories</option>
+            <% (categoriesList || []).forEach(function (c) { %>
+              <option value="<%= c %>" <%= category === c ? "selected" : "" %>><%= c %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="jobs-filter-cell jobs-filter-cell--2">
+          <label class="jobs-filter-label" for="jf-sort">Sort</label>
+          <select id="jf-sort" name="sort">
+            <option value="newest" <%= sort === "newest" || !sort ? "selected" : "" %>>Newest first</option>
+            <option value="oldest" <%= sort === "oldest" ? "selected" : "" %>>Oldest first</option>
+            <option value="title" <%= sort === "title" ? "selected" : "" %>>Title A–Z</option>
+            <option value="company" <%= sort === "company" ? "selected" : "" %>>Company A–Z</option>
+          </select>
+        </div>
+        <div class="jobs-filter-cell jobs-filter-cell--actions">
+          <button type="submit" class="jobs-filter-submit">Apply filters</button>
+          <% if (keyword || location || jobType || experienceLevel || category || (sort && sort !== "newest")) { %>
+            <a href="/jobs" class="jobs-filter-clear">Clear all</a>
+          <% } %>
+        </div>
+      </form>
+
+      <% if (jobs && jobs.length > 0) { %>
+        <div class="jobs-results-bar" role="status">
+          <p class="jobs-results-count">
+            <span class="jobs-results-number"><%= jobs.length %></span>
+            <%= jobs.length === 1 ? "open role" : "open roles" %>
+            <span class="jobs-results-sub">matching your filters</span>
+          </p>
+          <p class="jobs-results-hint">
+            <% if (typeof currentUser !== "undefined" && currentUser) { %>
+              Select a role to view details and apply from the panel
+            <% } else { %>
+              Open a card for full description — sign in to apply
+            <% } %>
+          </p>
+        </div>
+        <div class="jobs-page-grid" id="jobs-page-grid">
+          <% jobs.forEach(function (job) { %>
+            <button
+              type="button"
+              class="jobs-page-card"
+              data-job-id="<%= job._id %>"
+              aria-haspopup="dialog"
+              aria-expanded="false"
+            >
+              <div class="jobs-page-card-body">
+                <div class="jobs-page-card-head">
+                  <div class="jobs-page-avatar" aria-hidden="true">
+                    <% if (job.recruiterPhotoUrl) { %>
+                      <img src="<%= job.recruiterPhotoUrl %>" alt="" class="jobs-page-avatar-img" />
+                    <% } else { %>
+                      <%= job.companyInitial %>
+                    <% } %>
+                  </div>
+                  <span class="jobs-page-age"><%= job.postedLabel %></span>
+                </div>
+                <span class="jobs-page-card-cta-strip">View details</span>
+                <h2 class="jobs-page-card-title"><%= job.title %></h2>
+                <p class="jobs-page-card-company"><%= job.company %></p>
+                <% 
+                  var _jloc = String(job.location || "");
+                  var _jpill = job.jobType || "Role";
+                  if (job.jobType !== "Remote" && /remote/i.test(_jloc)) { _jpill += " · Remote"; }
+                  else if (job.experienceLevel) { _jpill += " · " + job.experienceLevel; }
+                  if (job.category && String(job.category).trim()) { _jpill += " · " + String(job.category).trim(); }
+                %>
+                <p class="jobs-page-card-type-pill"><%= _jpill %></p>
+                <p class="jobs-page-salary"><%= job.salary && String(job.salary).trim() ? job.salary : "Salary not disclosed" %></p>
+                <% var _cu = typeof currentUser !== "undefined" && currentUser ? currentUser : null; %>
+                <% if (!_cu) { %>
+                  <p class="jobs-page-card-hint">To access features on this platform, you must register your personal identification.</p>
+                <% } else { %>
+                  <p class="jobs-page-card-hint jobs-page-card-hint--signed-in">You're signed in — open this job to read the full description and apply.</p>
+                <% } %>
+                <p class="jobs-page-card-loc"><%= job.location %></p>
+              </div>
+            </button>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="jobs-page-empty">No jobs match your filters. Try clearing filters or broadening your search.</p>
+      <% } %>
+    </div>
+  </section>
+
+  <div
+    class="job-modal-overlay"
+    id="job-modal-overlay"
+    aria-hidden="true"
+  >
+    <div class="job-modal-scrim" id="job-modal-scrim" tabindex="-1"></div>
+    <div
+      class="job-modal-dialog"
+      id="job-modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="job-modal-title"
+    >
+      <button type="button" class="job-modal-close" id="job-modal-close" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <div class="job-modal-body" id="job-modal-body">
+        <p class="job-modal-loading">Loading…</p>
+      </div>
+      <div class="job-modal-footer" id="job-modal-footer" hidden></div>
+    </div>
+  </div>
+
+  <%- include("partials/footer") %>
+
+  <script>
+    (function () {
+      var overlay = document.getElementById("job-modal-overlay");
+      var scrim = document.getElementById("job-modal-scrim");
+      var closeBtn = document.getElementById("job-modal-close");
+      var bodyEl = document.getElementById("job-modal-body");
+      var footerEl = document.getElementById("job-modal-footer");
+      var dialog = document.getElementById("job-modal-dialog");
+      if (!overlay || !bodyEl || !footerEl) return;
+
+      function esc(s) {
+        if (s == null) return "";
+        var d = document.createElement("div");
+        d.textContent = String(s);
+        return d.innerHTML;
+      }
+
+      function postedFromIso(iso) {
+        if (!iso) return "Recently";
+        var d = new Date(iso);
+        var days = Math.floor((Date.now() - d.getTime()) / 86400000);
+        if (days <= 0) return "Posted today";
+        if (days === 1) return "1 day ago";
+        return days + " days ago";
+      }
+
+      function setOpen(open) {
+        overlay.classList.toggle("is-open", open);
+        overlay.setAttribute("aria-hidden", open ? "false" : "true");
+        document.body.classList.toggle("job-modal-open", open);
+        if (!open) {
+          bodyEl.innerHTML = '<p class="job-modal-loading">Loading…</p>';
+          footerEl.innerHTML = "";
+          footerEl.hidden = true;
+        }
+      }
+
+      function closeModal() {
+        setOpen(false);
+        document.querySelectorAll(".jobs-page-card[aria-expanded='true']").forEach(function (c) {
+          c.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      scrim &&
+        scrim.addEventListener("click", function () {
+          closeModal();
+        });
+      closeBtn &&
+        closeBtn.addEventListener("click", function () {
+          closeModal();
+        });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && overlay.classList.contains("is-open")) {
+          e.preventDefault();
+          closeModal();
+        }
+      });
+
+      function renderJob(data) {
+        var j = data.job;
+        var r = j.recruiter || {};
+        var photoHtml = r.photoUrl
+          ? '<img src="' + esc(r.photoUrl) + '" alt="" />'
+          : esc(r.initial || "?");
+
+        var tags =
+          '<span class="jobs-page-tag">' +
+          esc(j.jobType) +
+          (j.experienceLevel ? " · " + esc(j.experienceLevel) : "") +
+          "</span>";
+        if (j.category) {
+          tags +=
+            '<span class="jobs-page-tag jobs-page-tag--muted">' + esc(j.category) + "</span>";
+        }
+
+        var reqHtml = "";
+        if (j.requirements && j.requirements.length) {
+          reqHtml =
+            '<p class="job-modal-req-title">Requirements</p><ul class="job-modal-req-list">';
+          j.requirements.forEach(function (line) {
+            reqHtml += "<li>" + esc(line) + "</li>";
+          });
+          reqHtml += "</ul>";
+        }
+
+        bodyEl.innerHTML =
+          '<div class="job-modal-recruiter">' +
+          '<div class="job-modal-recruiter-avatar">' +
+          photoHtml +
+          "</div>" +
+          "<div>" +
+          '<p class="job-modal-title" id="job-modal-title">' +
+          esc(j.title) +
+          "</p>" +
+          '<p class="job-modal-company">' +
+          esc(j.company) +
+          "</p>" +
+          '<div class="job-modal-meta">' +
+          tags +
+          "</div>" +
+          '<p class="jobs-page-salary" style="margin:0 0 12px">' +
+          esc(j.salary && String(j.salary).trim() ? j.salary : "Salary not disclosed") +
+          "</p>" +
+          "<p style='font-size:0.88rem;color:var(--text-soft);margin:0'>⌖ " +
+          esc(j.location) +
+          " · " +
+          esc(postedFromIso(j.createdAt)) +
+          "</p>" +
+          "</div></div>" +
+          '<p class="job-modal-desc">' +
+          esc(j.description) +
+          "</p>" +
+          reqHtml;
+
+        footerEl.hidden = false;
+        var id = j._id;
+        var fullUrl = "/jobs/" + id;
+
+        if (data.hasApplied) {
+          footerEl.innerHTML =
+            '<p class="job-modal-badge">You have already applied to this role.</p>' +
+            '<div class="job-modal-secondary-actions"><a class="job-modal-link" href="' +
+            fullUrl +
+            '">Open full page</a></div>';
+        } else if (data.canApply) {
+          footerEl.innerHTML =
+            '<form class="job-modal-apply-form" action="/jobs/' +
+            id +
+            '/apply" method="post">' +
+            '<label class="jobs-filter-label" for="jm-cover">Cover note (optional)</label>' +
+            '<textarea id="jm-cover" name="coverLetter" placeholder="Brief message to the recruiter"></textarea>' +
+            '<button type="submit" class="job-modal-apply-btn">Submit application</button>' +
+            "</form>" +
+            '<div class="job-modal-secondary-actions"><a class="job-modal-link" href="' +
+            fullUrl +
+            '">Open full page</a></div>';
+        } else if (data.isLoggedIn && !data.isJobseeker) {
+          footerEl.innerHTML =
+            '<p class="job-modal-badge">Switch to a job seeker account to apply.</p>' +
+            '<div class="job-modal-secondary-actions"><a class="job-modal-link" href="' +
+            fullUrl +
+            '">Open full page</a></div>';
+        } else {
+          footerEl.innerHTML =
+            '<a class="job-modal-apply-btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="/login">Sign in to apply</a>' +
+            '<div class="job-modal-secondary-actions">' +
+            '<a class="job-modal-link" href="/register">Create account</a>' +
+            '<a class="job-modal-link" href="' +
+            fullUrl +
+            '">Open full page</a></div>';
+        }
+      }
+
+      document.getElementById("jobs-page-grid") &&
+        document.getElementById("jobs-page-grid").addEventListener("click", function (e) {
+          var card = e.target.closest(".jobs-page-card");
+          if (!card) return;
+          var id = card.getAttribute("data-job-id");
+          if (!id) return;
+          card.setAttribute("aria-expanded", "true");
+          setOpen(true);
+          bodyEl.innerHTML = '<p class="job-modal-loading">Loading…</p>';
+          footerEl.hidden = true;
+          fetch("/jobs/preview/" + id)
+            .then(function (r) {
+              if (!r.ok) throw new Error("Not found");
+              return r.json();
+            })
+            .then(renderJob)
+            .catch(function () {
+              bodyEl.innerHTML =
+                '<p class="job-modal-error">Could not load this job. Try again or open the full page.</p>';
+              footerEl.hidden = false;
+              footerEl.innerHTML =
+                '<div class="job-modal-secondary-actions"><a class="job-modal-link" href="/jobs/' +
+                String(id) +
+                '">Open full page</a></div>';
+            });
+        });
+    })();
+  </script>
+</body>
+</html>

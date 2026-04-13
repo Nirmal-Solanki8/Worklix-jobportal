@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Post Job - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+
+  <div class="form-container form-page">
+    <h2><%= job ? "Edit Job" : "Post a Job" %></h2>
+    <form action="<%= job ? '/jobs/' + job._id + '/edit' : '/jobs/new' %>" method="POST">
+      <input type="text" name="title" placeholder="Job Title" list="jobTitleSuggestions" value="<%= job ? job.title : '' %>" required />
+      <datalist id="jobTitleSuggestions">
+        <option value="Frontend Developer"></option>
+        <option value="Backend Developer"></option>
+        <option value="Full Stack Developer"></option>
+        <option value="UI/UX Designer"></option>
+        <option value="DevOps Engineer"></option>
+      </datalist>
+      <input type="text" name="company" placeholder="Company Name" value="<%= job ? job.company : '' %>" required />
+      <input type="text" name="location" placeholder="Location" list="locationSuggestions" value="<%= job ? job.location : '' %>" required />
+      <datalist id="locationSuggestions">
+        <option value="Remote"></option>
+        <option value="Bangalore"></option>
+        <option value="Delhi"></option>
+        <option value="Mumbai"></option>
+        <option value="Pune"></option>
+      </datalist>
+      <input type="text" name="salary" placeholder="Salary" value="<%= job ? job.salary : '' %>" />
+      <select name="jobType" required>
+        <option value="Full-Time" <%= !job || job.jobType === "Full-Time" ? "selected" : "" %>>Full-Time</option>
+        <option value="Part-Time" <%= job && job.jobType === "Part-Time" ? "selected" : "" %>>Part-Time</option>
+        <option value="Internship" <%= job && job.jobType === "Internship" ? "selected" : "" %>>Internship</option>
+        <option value="Remote" <%= job && job.jobType === "Remote" ? "selected" : "" %>>Remote</option>
+        <option value="Contract" <%= job && job.jobType === "Contract" ? "selected" : "" %>>Contract</option>
+      </select>
+      <input type="text" name="category" placeholder="Category (e.g. Engineering, Design)" list="categorySuggestions" value="<%= job ? job.category : '' %>" />
+      <datalist id="categorySuggestions">
+        <option value="Engineering"></option>
+        <option value="Design"></option>
+        <option value="Marketing"></option>
+        <option value="Sales"></option>
+        <option value="Operations"></option>
+      </datalist>
+      <select name="experienceLevel" required>
+        <option value="Fresher" <%= !job || job.experienceLevel === "Fresher" ? "selected" : "" %>>Fresher</option>
+        <option value="Junior" <%= job && job.experienceLevel === "Junior" ? "selected" : "" %>>Junior</option>
+        <option value="Mid" <%= job && job.experienceLevel === "Mid" ? "selected" : "" %>>Mid</option>
+        <option value="Senior" <%= job && job.experienceLevel === "Senior" ? "selected" : "" %>>Senior</option>
+      </select>
+      <textarea name="description" placeholder="Job Description" required><%= job ? job.description : '' %></textarea>
+      <input type="text" name="requirements" placeholder="Requirements comma separated (e.g. Node.js, MongoDB, REST)" value="<%= job && job.requirements ? job.requirements.join(', ') : '' %>" />
+      <input type="date" name="deadline" value="<%= job && job.deadline ? new Date(job.deadline).toISOString().slice(0, 10) : '' %>" />
+      <button type="submit"><%= job ? "Update Job" : "Create Job" %></button>
+    </form>
+  </div>
+  <%- include("partials/footer") %>
+</body>
+</html>

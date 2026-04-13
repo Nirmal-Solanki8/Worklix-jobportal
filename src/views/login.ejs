@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Sign in - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+
+  <section class="auth-page auth-page--signin" aria-label="Sign in">
+    <div class="nav-auth-modal auth-page-card" role="region" aria-labelledby="login-heading">
+      <div class="nav-auth-modal-inner">
+        <header class="auth-page-header">
+          <p class="auth-card-eyebrow">Account</p>
+          <h1 id="login-heading" class="nav-auth-heading">Welcome back</h1>
+          <p class="nav-auth-sub">Sign in to apply to jobs, manage applications, and more.</p>
+        </header>
+
+        <form class="nav-auth-form" action="/auth/login" method="post">
+          <label class="nav-auth-label">
+            <span class="nav-auth-label-text">Email</span>
+            <input type="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+          </label>
+          <label class="nav-auth-label">
+            <span class="nav-auth-label-text">Password</span>
+            <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+          </label>
+          <button type="submit" class="nav-auth-submit">Sign in</button>
+        </form>
+
+        <div class="nav-auth-footer">
+          <span class="nav-auth-muted">New to Worklix?</span>
+          <a href="/register" class="nav-auth-register">Create an account</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include("partials/footer") %>
+</body>
+</html>

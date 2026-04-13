@@ -1,0 +1,128 @@
+/* Shared premium UI — load after portal.css */
+
+/* App pages that use stacked cards inside .container */
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-page > h1 {
+  margin-bottom: 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line-subtle);
+}
+
+.dashboard-page > p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.dashboard-subtitle {
+  font-size: 0.95rem;
+  max-width: 64ch;
+}
+
+.dashboard-page .jobs-grid {
+  margin-top: 0;
+}
+
+/* Plain text links inside dashboard containers (e.g. job detail apply hint) */
+.dashboard-page p a[href],
+.container:not(.dashboard-page) > p a[href] {
+  font-weight: 700;
+  color: var(--secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
+}
+
+.dashboard-page p a[href]:hover,
+.dashboard-page p a[href]:focus-visible,
+.container:not(.dashboard-page) > p a[href]:hover,
+.container:not(.dashboard-page) > p a[href]:focus-visible {
+  color: var(--primary-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-page p a[href],
+  .container > p a[href] {
+    transition: none;
+  }
+}
+
+/* Post / edit job — premium form shell */
+.form-page.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-page.form-container > h2 {
+  margin-bottom: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line-subtle);
+  font-size: clamp(1.5rem, 3vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+}
+
+.form-page.form-container > form {
+  margin-top: 8px;
+}
+
+.dashboard-page .job-details-header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line-subtle);
+}
+
+.dashboard-page .job-details-grid {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.dashboard-page .job-card form {
+  margin-top: 12px;
+  gap: 12px;
+}
+
+.dashboard-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-actions-row > a[href] {
+  margin-top: 0;
+}
+
+.dashboard-inline-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-top: 4px;
+}
+
+.dashboard-inline-links > a[href] {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--secondary);
+  text-decoration: none;
+}
+
+.dashboard-inline-links > a[href]:hover,
+.dashboard-inline-links > a[href]:focus-visible {
+  color: var(--primary-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.dashboard-stat-card p {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+}

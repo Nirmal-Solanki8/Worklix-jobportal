@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Recruiter Dashboard - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+
+  <div class="container dashboard-page">
+    <h1>My Posted Jobs</h1>
+    <p class="dashboard-subtitle">Create and manage your listings, applicants, and job status from one place.</p>
+    <div class="dashboard-actions-row">
+      <a href="/jobs/new">Create New Job</a>
+    </div>
+
+    <% if (jobs && jobs.length > 0) { %>
+      <% jobs.forEach(job => { %>
+        <div class="job-card">
+          <h3><%= job.title %></h3>
+          <p><%= job.company %></p>
+          <p><%= job.location %></p>
+          <p>Status: <%= job.status %></p>
+          <div class="dashboard-inline-links">
+            <a href="/jobs/<%= job._id %>/applicants">View Applicants</a>
+            <a href="/jobs/<%= job._id %>/edit">Edit</a>
+          </div>
+          <form action="/jobs/<%= job._id %>/status" method="post">
+            <input type="hidden" name="status" value="<%= job.status === 'open' ? 'closed' : 'open' %>" />
+            <button type="submit"><%= job.status === "open" ? "Close Job" : "Reopen Job" %></button>
+          </form>
+          <form action="/jobs/<%= job._id %>/delete" method="post">
+            <button type="submit">Delete Job</button>
+          </form>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No jobs posted yet.</p>
+    <% } %>
+  </div>
+  <%- include("partials/footer") %>
+</body>
+</html>

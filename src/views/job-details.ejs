@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Job Details - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+
+  <div class="container dashboard-page">
+    <% if (!job) { %>
+      <p>Job not found.</p>
+    <% } else { %>
+      <div class="job-details-header">
+        <% var _rp = job.recruiter && job.recruiter.profilePhoto ? "/" + String(job.recruiter.profilePhoto).replace(/^\//, "") : null; %>
+        <% if (_rp) { %>
+          <p style="margin-bottom:12px"><img src="<%= _rp %>" alt="" style="width:64px;height:64px;border-radius:16px;object-fit:cover;border:1px solid var(--border-panel)" /></p>
+        <% } %>
+        <h1><%= job.title %></h1>
+        <p><strong><%= job.company %></strong> • <%= job.location %></p>
+        <p>
+          <span class="chip"><%= job.jobType %></span>
+          <span class="chip"><%= job.experienceLevel %></span>
+          <span class="chip"><%= job.category || "General" %></span>
+          <span class="chip"><%= job.status %></span>
+        </p>
+      </div>
+
+      <div class="job-details-grid">
+        <section class="job-card">
+          <h3>Job Description</h3>
+          <p><%= job.description %></p>
+        </section>
+
+        <section class="job-card">
+          <h3>Details</h3>
+          <p><strong>Salary:</strong> <%= job.salary || "Not disclosed" %></p>
+          <p><strong>Deadline:</strong> <%= job.deadline ? new Date(job.deadline).toDateString() : "Not specified" %></p>
+          <p><strong>Posted by:</strong> <%= job.recruiter ? (job.recruiter.companyName || job.recruiter.name) : "Unknown recruiter" %></p>
+          <p><strong>Contact:</strong> <%= job.recruiter ? job.recruiter.email : "-" %></p>
+        </section>
+      </div>
+
+      <section class="job-card">
+        <h3>Requirements</h3>
+        <% if (job.requirements && job.requirements.length > 0) { %>
+          <ul>
+            <% job.requirements.forEach(item => { %>
+              <li><%= item %></li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p>No specific requirements listed.</p>
+        <% } %>
+      </section>
+
+      <% if (currentUser && currentUser.role === "jobseeker" && job.status === "open") { %>
+        <section class="job-card">
+          <h3>Apply for this job</h3>
+          <form action="/jobs/<%= job._id %>/apply" method="POST">
+            <textarea name="coverLetter" placeholder="Write your cover letter"></textarea>
+            <input type="text" name="resume" placeholder="Resume link (Google Drive, portfolio, etc.)" />
+            <button type="submit">Apply Now</button>
+          </form>
+        </section>
+      <% } else if (!currentUser) { %>
+        <p><a href="/login">Login</a> as a jobseeker to apply.</p>
+      <% } %>
+    <% } %>
+  </div>
+  <%- include("partials/footer") %>
+</body>
+</html>

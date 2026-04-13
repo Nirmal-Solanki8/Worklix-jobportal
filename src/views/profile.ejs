@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Your profile - Worklix", extraCss: "/css/profile-page.css" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+
+  <% 
+    var _roleLabel = profileUser.role === "jobseeker" ? "Job seeker" : profileUser.role === "employer" ? "Recruiter" : "Admin";
+  %>
+
+  <section class="container container--wide profile-page">
+    <div class="profile-shell">
+      <header class="profile-hero">
+        <p class="profile-hero-eyebrow">Account</p>
+        <div class="profile-hero-row">
+          <h1 class="profile-hero-title">Profile &amp; settings</h1>
+          <span class="profile-role-pill"><%= _roleLabel %></span>
+        </div>
+        <p class="profile-hero-lead">
+          Hi, <strong><%= profileUser.name %></strong> — update how you appear across Worklix. Your photo shows on job listings when you recruit.
+        </p>
+      </header>
+
+      <form class="profile-form" action="/profile" method="post" enctype="multipart/form-data">
+        <div class="profile-card profile-card--photo">
+          <div class="profile-card-head">
+            <h2 class="profile-card-title">Photo</h2>
+            <p class="profile-card-desc">Square images look best. Recruiters and candidates see this next to your name.</p>
+          </div>
+          <div class="profile-photo-row">
+            <div class="profile-photo-preview" aria-hidden="true">
+              <% if (profileUser.profilePhoto) { %>
+                <img src="/<%= String(profileUser.profilePhoto).replace(/^\//, '') %>" alt="" class="profile-photo-img" />
+              <% } else { %>
+                <span class="profile-photo-placeholder"><%= (profileUser.name || "?").trim().charAt(0).toUpperCase() %></span>
+              <% } %>
+            </div>
+            <div class="profile-photo-upload">
+              <label class="profile-file-label" for="profile-photo-input">Upload a new picture</label>
+              <input id="profile-photo-input" class="profile-file-input" type="file" name="profilePhoto" accept="image/jpeg,image/png,image/gif,image/webp" />
+              <p class="profile-photo-hint">JPG, PNG, GIF or WebP — max 2MB</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-card profile-card--details">
+          <div class="profile-card-head">
+            <h2 class="profile-card-title">Your details</h2>
+            <p class="profile-card-desc">This information is stored securely and used only to run your account.</p>
+          </div>
+          <div class="profile-fields">
+            <label class="profile-field">
+              <span class="profile-field-label">Full name</span>
+              <input type="text" name="name" value="<%= profileUser.name %>" required autocomplete="name" />
+            </label>
+
+            <label class="profile-field">
+              <span class="profile-field-label">Phone</span>
+              <input type="tel" name="phone" value="<%= profileUser.phone || '' %>" placeholder="Optional" autocomplete="tel" />
+            </label>
+
+            <% if (profileUser.role === "employer" || profileUser.role === "admin") { %>
+              <label class="profile-field">
+                <span class="profile-field-label">Company name</span>
+                <input type="text" name="companyName" value="<%= profileUser.companyName || '' %>" autocomplete="organization" />
+              </label>
+            <% } %>
+
+            <% if (profileUser.role === "jobseeker") { %>
+              <label class="profile-field">
+                <span class="profile-field-label">Skills</span>
+                <input type="text" name="skills" value="<%= (profileUser.skills || []).join(', ') %>" placeholder="e.g. React, Node.js, Figma" autocomplete="off" />
+              </label>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="profile-card profile-card--security">
+          <fieldset class="profile-password-fieldset">
+            <legend class="profile-password-legend">Change password <span class="profile-optional-tag">Optional</span></legend>
+            <p class="profile-card-desc profile-card-desc--tight">Leave blank to keep your current password.</p>
+            <div class="profile-fields profile-fields--tight">
+              <label class="profile-field">
+                <span class="profile-field-label">New password</span>
+                <input type="password" name="newPassword" autocomplete="new-password" minlength="6" placeholder="At least 6 characters" />
+              </label>
+              <label class="profile-field">
+                <span class="profile-field-label">Confirm new password</span>
+                <input type="password" name="newPasswordConfirm" autocomplete="new-password" placeholder="Repeat new password" />
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="profile-actions">
+          <button type="submit" class="profile-save-btn">Save changes</button>
+          <a href="/" class="profile-back-link">Back to home</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <%- include("partials/footer") %>
+</body>
+</html>

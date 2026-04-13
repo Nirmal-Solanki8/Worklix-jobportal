@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Admin Applications - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+  <div class="container dashboard-page">
+    <h1>Manage Applications</h1>
+    <p class="dashboard-subtitle">Monitor submissions across all jobs and keep application states consistent.</p>
+    <% if (applications && applications.length > 0) { %>
+      <% applications.forEach(app => { %>
+        <div class="job-card">
+          <h3><%= app.applicant ? app.applicant.name : "-" %></h3>
+          <p>Job: <%= app.job ? app.job.title : "-" %></p>
+          <p>Recruiter: <%= app.recruiter ? app.recruiter.name : "-" %></p>
+          <p>Status: <%= app.status %></p>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No applications found.</p>
+    <% } %>
+  </div>
+  <%- include("partials/footer") %>
+</body>
+</html>

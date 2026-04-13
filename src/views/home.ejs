@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Home - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+
+  <main class="hero-page">
+    <section class="hero-card">
+      <div class="hero-left">
+        <div class="hero-badge">#1 Smart Hiring Platform</div>
+
+        <h1>
+          Take the right steps
+          to find the right job
+          for you
+        </h1>
+
+        <p>
+          Platform users who are passionate about what they do can find a lot of
+          opportunities.
+        </p>
+
+        <form class="search-box" action="/jobs" method="get">
+          <div class="search-input">
+            <span class="search-icon">⌕</span>
+            <input type="text" name="keyword" placeholder="Job title or keyword" />
+          </div>
+
+          <div class="search-input">
+            <span class="search-icon">⌖</span>
+            <input type="text" name="location" placeholder="India" />
+          </div>
+
+          <button type="submit" class="find-btn">Find Job</button>
+        </form>
+      </div>
+
+      <div class="hero-right">
+        <div class="image-box">
+          <img src="/images/hero-girl.png" alt="Professional woman with laptop" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="container container--wide popular-jobs-block">
+    <div class="popular-jobs-head-row">
+      <header class="popular-jobs-header">
+        <p class="popular-jobs-eyebrow">Popular Jobs</p>
+        <h2 class="popular-jobs-title">
+          <% var _cnt = typeof openJobCount === "number" ? openJobCount : 0; %>
+          <% if (_cnt > 0) { %>
+            Discover
+            <span class="popular-jobs-count"><%= _cnt.toLocaleString("en-IN") %>+</span>
+            popular job opportunities for your career
+          <% } else { %>
+            Discover popular job opportunities for your career
+          <% } %>
+        </h2>
+      </header>
+      <a href="/jobs" class="popular-jobs-see-all">
+        See all jobs
+        <span class="popular-jobs-see-all-icon" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <% if (jobs && jobs.length > 0) { %>
+      <div class="popular-jobs-grid">
+        <% jobs.forEach(function (job) { %>
+          <article class="popular-job-card">
+            <div class="popular-job-card-body">
+              <div class="popular-job-card-head">
+                <div class="popular-job-avatar" aria-hidden="true">
+                  <% if (job.recruiterPhotoUrl) { %>
+                    <img src="<%= job.recruiterPhotoUrl %>" alt="" class="popular-job-avatar-img" />
+                  <% } else { %>
+                    <%= job.companyInitial %>
+                  <% } %>
+                </div>
+                <time class="popular-job-age" datetime="<%= job.createdAt %>"><%= job.postedLabel %></time>
+              </div>
+              <a href="/jobs/<%= job._id %>" class="popular-job-apply">Apply for job</a>
+              <h3 class="popular-job-title"><%= job.title %></h3>
+              <p class="popular-job-company"><%= job.company %></p>
+              <% 
+                var _loc = String(job.location || "");
+                var _pill = job.jobType || "Role";
+                if (job.jobType !== "Remote" && /remote/i.test(_loc)) { _pill += " · Remote"; }
+                else if (job.experienceLevel) { _pill += " · " + job.experienceLevel; }
+              %>
+              <p class="popular-job-type-pill"><%= _pill %></p>
+              <% if (!currentUser) { %>
+                <p class="popular-job-hint">To access features on this platform, you must register your personal identification.</p>
+              <% } %>
+              <p class="popular-job-location"><%= job.location %></p>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p class="popular-jobs-empty">No open jobs available right now. Check back soon or try a broader search.</p>
+      <div class="popular-jobs-toolbar popular-jobs-toolbar--footer">
+        <a href="/jobs" class="popular-jobs-see-all">Browse jobs</a>
+      </div>
+    <% } %>
+  </section>
+
+  <%- include("partials/footer") %>
+</body>
+</html>

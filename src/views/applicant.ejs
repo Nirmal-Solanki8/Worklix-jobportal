@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Applicants - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+
+  <div class="container dashboard-page">
+    <h1>Applicants <%= selectedJob ? "for " + selectedJob.title : "" %></h1>
+    <p class="dashboard-subtitle">Review incoming applicants and update status for each candidate.</p>
+
+    <% if (applications && applications.length > 0) { %>
+      <% applications.forEach(app => { %>
+        <div class="job-card">
+          <h3><%= app.applicant ? app.applicant.name : "Unknown applicant" %></h3>
+          <p><%= app.applicant ? app.applicant.email : "-" %></p>
+          <p>Job: <%= app.job ? app.job.title : "-" %></p>
+          <p>Status: <%= app.status %></p>
+          <form action="/applications/<%= app._id %>/status" method="post">
+            <select name="status">
+              <option value="pending">pending</option>
+              <option value="reviewed">reviewed</option>
+              <option value="shortlisted">shortlisted</option>
+              <option value="rejected">rejected</option>
+              <option value="accepted">accepted</option>
+            </select>
+            <button type="submit">Update Status</button>
+          </form>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>No applicants found.</p>
+    <% } %>
+  </div>
+  <%- include("partials/footer") %>
+</body>
+</html>

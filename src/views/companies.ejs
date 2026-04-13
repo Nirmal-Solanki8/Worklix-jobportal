@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Companies - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <div class="container dashboard-page">
+    <h1>Companies</h1>
+    <% if (companies && companies.length > 0) { %>
+      <div class="jobs-grid">
+      <% companies.forEach(company => { %>
+        <div class="job-card">
+          <h3><%= company.companyName || company.name %></h3>
+          <p>Contact: <%= company.email %></p>
+        </div>
+      <% }) %>
+      </div>
+    <% } else { %>
+      <p>No companies found.</p>
+    <% } %>
+  </div>
+  <%- include("partials/footer") %>
+</body>
+</html>

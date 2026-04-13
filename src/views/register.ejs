@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("partials/head", { title: "Create account - Worklix" }) %>
+</head>
+<body>
+  <%- include("partials/navbar") %>
+  <%- include("partials/alerts", { query }) %>
+
+  <section class="auth-page auth-page--signin auth-page--register" aria-label="Create account">
+    <div class="nav-auth-modal auth-page-card" role="region" aria-labelledby="register-heading">
+      <div class="nav-auth-modal-inner">
+        <header class="auth-page-header">
+          <p class="auth-card-eyebrow">Get started</p>
+          <h1 id="register-heading" class="nav-auth-heading">Create your account</h1>
+          <p class="nav-auth-sub">Join thousands using Worklix to find work and hire faster — free to sign up.</p>
+        </header>
+
+        <form class="nav-auth-form auth-register-form" action="/auth/register" method="post">
+          <div class="auth-register-primary">
+            <label class="nav-auth-label">
+              <span class="nav-auth-label-text">Full name</span>
+              <input type="text" name="name" placeholder="Jane Doe" required autocomplete="name" />
+            </label>
+            <label class="nav-auth-label">
+              <span class="nav-auth-label-text">Work email</span>
+              <input type="email" name="email" placeholder="you@company.com" required autocomplete="email" />
+            </label>
+            <label class="nav-auth-label">
+              <span class="nav-auth-label-text">Password</span>
+              <input type="password" name="password" placeholder="At least 6 characters" required autocomplete="new-password" minlength="6" />
+            </label>
+            <label class="nav-auth-label">
+              <span class="nav-auth-label-text">I am joining as</span>
+              <select name="role" required aria-describedby="role-hint">
+                <option value="" disabled selected>Choose one</option>
+                <option value="jobseeker">Job seeker</option>
+                <option value="employer">Employer / recruiter</option>
+              </select>
+              <span id="role-hint" class="auth-input-hint">You can change this later from your profile.</span>
+            </label>
+          </div>
+
+          <div class="auth-field-group auth-register-secondary">
+            <p class="auth-field-group-title">Profile details <span class="nav-auth-optional">optional</span></p>
+            <p class="auth-field-group-lead">Helps employers and our team reach you when it matters.</p>
+            <label class="nav-auth-label">
+              <span class="nav-auth-label-text">Phone</span>
+              <input type="tel" name="phone" placeholder="+91 90000 00000" autocomplete="tel" />
+            </label>
+            <label class="nav-auth-label">
+              <span class="nav-auth-label-text">Skills</span>
+              <input type="text" name="skills" placeholder="e.g. React, UX, Sales" />
+            </label>
+            <label class="nav-auth-label">
+              <span class="nav-auth-label-text">Company name</span>
+              <input type="text" name="companyName" placeholder="If you’re hiring" autocomplete="organization" />
+            </label>
+          </div>
+
+          <div class="auth-register-actions">
+            <button type="submit" class="nav-auth-submit">Create account</button>
+            <p class="auth-legal">By continuing you agree to fair use of the platform and accurate profile information.</p>
+          </div>
+        </form>
+
+        <div class="nav-auth-footer">
+          <span class="nav-auth-muted">Already have an account?</span>
+          <a href="/login" class="nav-auth-register">Sign in</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include("partials/footer") %>
+</body>
+</html>
