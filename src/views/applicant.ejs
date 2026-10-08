@@ -12,24 +12,63 @@
     <p class="dashboard-subtitle">Review incoming applicants and update status for each candidate.</p>
 
     <% if (applications && applications.length > 0) { %>
-      <% applications.forEach(app => { %>
-        <div class="job-card">
-          <h3><%= app.applicant ? app.applicant.name : "Unknown applicant" %></h3>
-          <p><%= app.applicant ? app.applicant.email : "-" %></p>
-          <p>Job: <%= app.job ? app.job.title : "-" %></p>
-          <p>Status: <%= app.status %></p>
-          <form action="/applications/<%= app._id %>/status" method="post">
-            <select name="status">
-              <option value="pending">pending</option>
-              <option value="reviewed">reviewed</option>
-              <option value="shortlisted">shortlisted</option>
-              <option value="rejected">rejected</option>
-              <option value="accepted">accepted</option>
-            </select>
-            <button type="submit">Update Status</button>
-          </form>
-        </div>
-      <% }) %>
+      <div class="jobs-grid">
+        <% applications.forEach(app => { %>
+          <div class="job-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+              <div>
+                <h3 style="margin-bottom:4px;"><%= app.applicant ? app.applicant.name : "Candidate" %></h3>
+                <p style="color:var(--text-muted); font-size:0.9rem;">
+                  <strong>Email:</strong> <%= app.applicant ? app.applicant.email : "-" %>
+                  <% if (app.applicant && app.applicant.phone) { %> &bull; <strong>Phone:</strong> <%= app.applicant.phone %><% } %>
+                </p>
+                <p style="color:var(--secondary); font-size:0.85rem; font-weight:600; margin-top:4px;">
+                  Applied for: <strong><%= app.job ? app.job.title : "Archived Position" %></strong>
+                </p>
+              </div>
+              <span class="status-pill status-pill--<%= app.status %>"><%= app.status %></span>
+            </div>
+
+            <% if (app.applicant && app.applicant.skills && app.applicant.skills.length > 0) { %>
+              <div class="skills-tags-row">
+                <% app.applicant.skills.forEach(skill => { %>
+                  <span class="skill-tag"><%= skill %></span>
+                <% }) %>
+              </div>
+            <% } %>
+
+            <% if (app.coverLetter) { %>
+              <div style="margin: 10px 0; background:var(--surface-muted); padding:12px; border-radius:var(--radius-sm); border-left:3px solid var(--primary);">
+                <p style="font-size:0.82rem; font-weight:700; color:var(--text-main); margin-bottom:4px;">Cover Letter:</p>
+                <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.5;"><%= app.coverLetter %></p>
+              </div>
+            <% } %>
+
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--line-subtle);">
+              <div>
+                <% if (app.resume) { %>
+                  <a href="<%= app.resume %>" target="_blank" rel="noopener noreferrer" class="resume-link-btn">
+                    <span>📄 View Candidate Resume</span>
+                  </a>
+                <% } else { %>
+                  <span style="font-size:0.82rem; color:var(--text-muted);">No resume link provided</span>
+                <% } %>
+              </div>
+
+              <form action="/applications/<%= app._id %>/status" method="post" style="display:flex; align-items:center; gap:8px;">
+                <select name="status" style="padding:6px 10px; border-radius:var(--radius-sm); border:1px solid var(--border-panel); font-size:0.85rem; font-weight:600; text-transform:capitalize;">
+                  <option value="pending" <%= app.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                  <option value="reviewed" <%= app.status === 'reviewed' ? 'selected' : '' %>>Reviewed</option>
+                  <option value="shortlisted" <%= app.status === 'shortlisted' ? 'selected' : '' %>>Shortlisted</option>
+                  <option value="rejected" <%= app.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+                  <option value="accepted" <%= app.status === 'accepted' ? 'selected' : '' %>>Accepted</option>
+                </select>
+                <button type="submit" style="padding:6px 14px; border-radius:var(--radius-sm); font-size:0.82rem; font-weight:700; cursor:pointer;">Update</button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
     <% } else { %>
       <p>No applicants found.</p>
     <% } %>

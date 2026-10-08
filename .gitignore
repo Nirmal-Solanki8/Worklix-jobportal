@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+package-lock.json.log
+
+# Environment variables & local secrets
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Runtime data & User uploads
+uploads/
+public/uploads/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp

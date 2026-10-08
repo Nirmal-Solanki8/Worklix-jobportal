@@ -12,16 +12,42 @@
     <p class="dashboard-subtitle">Track your submitted roles and withdraw applications when needed.</p>
 
     <% if (applications && applications.length > 0) { %>
-      <% applications.forEach(app => { %>
-        <div class="job-card">
-          <h3><%= app.job ? app.job.title : "Deleted Job" %></h3>
-          <p><%= app.job ? app.job.company : "-" %></p>
-          <p>Status: <%= app.status %></p>
-          <form action="/applications/<%= app._id %>/withdraw" method="post">
-            <button type="submit">Withdraw</button>
-          </form>
-        </div>
-      <% }) %>
+      <div class="jobs-grid">
+        <% applications.forEach(app => { %>
+          <div class="job-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+              <div>
+                <h3 style="margin-bottom:4px;"><%= app.job ? app.job.title : "Archived Position" %></h3>
+                <p style="color:var(--text-muted); font-weight:600;"><%= app.job ? app.job.company : "-" %> &bull; <%= app.job ? app.job.location : "" %></p>
+              </div>
+              <span class="status-pill status-pill--<%= app.status %>"><%= app.status %></span>
+            </div>
+
+            <% if (app.coverLetter) { %>
+              <p style="font-size:0.88rem; color:var(--text-muted); margin: 8px 0; background:var(--surface-muted); padding:10px 12px; border-radius:var(--radius-sm); border-left:3px solid var(--secondary);">
+                <strong>Cover Letter:</strong> <%= app.coverLetter.length > 140 ? app.coverLetter.substring(0, 140) + "..." : app.coverLetter %>
+              </p>
+            <% } %>
+
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-top:14px; padding-top:12px; border-top:1px solid var(--line-subtle);">
+              <div style="display:flex; gap:12px; align-items:center;">
+                <% if (app.job) { %>
+                  <a href="/jobs/<%= app.job._id %>" style="font-size:0.85rem; font-weight:700; color:var(--secondary); text-decoration:none;">View Job Details &rarr;</a>
+                <% } %>
+                <% if (app.resume) { %>
+                  <a href="<%= app.resume %>" target="_blank" rel="noopener noreferrer" class="resume-link-btn">
+                    <span>📄 View Submitted Resume</span>
+                  </a>
+                <% } %>
+              </div>
+
+              <form action="/applications/<%= app._id %>/withdraw" method="post" onsubmit="return confirm('Are you sure you want to withdraw this application?');">
+                <button type="submit" style="background:transparent; border:1px solid #f87171; color:#ef4444; padding:6px 14px; border-radius:var(--radius-sm); font-size:0.82rem; font-weight:600; cursor:pointer;">Withdraw</button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
     <% } else { %>
       <p>You have not applied to any jobs yet.</p>
     <% } %>

@@ -11,17 +11,19 @@
     <p class="dashboard-subtitle">Adjust account roles for jobseekers, employers, and administrators.</p>
     <% if (users && users.length > 0) { %>
       <% users.forEach(user => { %>
-        <div class="job-card">
-          <h3><%= user.name %></h3>
-          <p><%= user.email %></p>
-          <p>Role: <%= user.role %></p>
-          <form action="/admin/users/<%= user._id %>/role" method="post">
-            <select name="role">
-              <option value="jobseeker">jobseeker</option>
-              <option value="employer">employer</option>
-              <option value="admin">admin</option>
+        <div class="job-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+          <div>
+            <h3 style="margin-bottom:4px;"><%= user.name %></h3>
+            <p style="color:var(--text-muted); font-size:0.9rem;"><%= user.email %></p>
+            <p style="margin-top:6px;"><span class="chip" style="text-transform:capitalize; font-weight:700;"><%= user.role %></span></p>
+          </div>
+          <form action="/admin/users/<%= user._id %>/role" method="post" style="display:flex; align-items:center; gap:8px;">
+            <select name="role" style="padding:6px 12px; border-radius:var(--radius-sm); border:1px solid var(--border-panel); font-weight:600;">
+              <option value="jobseeker" <%= user.role === 'jobseeker' ? 'selected' : '' %>>Jobseeker</option>
+              <option value="employer" <%= user.role === 'employer' ? 'selected' : '' %>>Employer</option>
+              <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
             </select>
-            <button type="submit">Update Role</button>
+            <button type="submit" style="padding:6px 14px; border-radius:var(--radius-sm); font-size:0.85rem; font-weight:700; cursor:pointer;">Update Role</button>
           </form>
         </div>
       <% }) %>

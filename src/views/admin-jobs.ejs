@@ -11,11 +11,16 @@
     <p class="dashboard-subtitle">Review all posted jobs and track recruiter ownership and status.</p>
     <% if (jobs && jobs.length > 0) { %>
       <% jobs.forEach(job => { %>
-        <div class="job-card">
-          <h3><%= job.title %></h3>
-          <p><%= job.company %> - <%= job.location %></p>
-          <p>Recruiter: <%= job.recruiter ? job.recruiter.name : "-" %></p>
-          <p>Status: <%= job.status %></p>
+        <div class="job-card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <h3 style="margin-bottom:4px;"><%= job.title %></h3>
+            <p style="color:var(--text-muted); font-size:0.9rem;"><strong><%= job.company %></strong> &bull; <%= job.location %></p>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px;">Recruiter: <%= job.recruiter ? job.recruiter.name : "-" %></p>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span class="chip" style="text-transform:uppercase; font-size:0.75rem; font-weight:800;"><%= job.status %></span>
+            <a href="/jobs/<%= job._id %>" style="font-size:0.85rem; font-weight:700; color:var(--secondary); text-decoration:none;">View &rarr;</a>
+          </div>
         </div>
       <% }) %>
     <% } else { %>

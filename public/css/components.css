@@ -126,3 +126,178 @@
   letter-spacing: -0.03em;
   color: var(--text-main);
 }
+
+/* Quick Demo Access Box on Login */
+.demo-access-box {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: var(--radius-card);
+  background: var(--surface-muted);
+  border: 1px dashed var(--border-panel);
+}
+
+.demo-access-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.demo-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: rgba(13, 148, 136, 0.12);
+  color: var(--primary);
+}
+
+.demo-access-header small {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.demo-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .demo-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.demo-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-panel);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.demo-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--primary);
+}
+
+.demo-btn-role {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.demo-btn-hint {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.demo-btn--candidate:hover { border-color: #0284c7; }
+.demo-btn--recruiter:hover { border-color: #0d9488; }
+.demo-btn--admin:hover { border-color: #7c3aed; }
+
+/* Status Badges */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+}
+
+.status-pill::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-pill--pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+.status-pill--pending::before { background: #d97706; }
+
+.status-pill--reviewed {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+.status-pill--reviewed::before { background: #0284c7; }
+
+.status-pill--shortlisted {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+.status-pill--shortlisted::before { background: #7c3aed; }
+
+.status-pill--accepted {
+  background: #dcfce7;
+  color: #15803d;
+}
+.status-pill--accepted::before { background: #16a34a; }
+
+.status-pill--rejected {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.status-pill--rejected::before { background: #dc2626; }
+
+/* Resume link button */
+.resume-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--surface-muted);
+  color: var(--secondary);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.resume-link-btn:hover {
+  background: var(--secondary);
+  color: #ffffff;
+  border-color: var(--secondary);
+  text-decoration: none;
+}
+
+/* Skills tags list */
+.skills-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0;
+}
+
+.skill-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--bg-1);
+  color: var(--text-muted);
+  border: 1px solid var(--line-subtle);
+}
+

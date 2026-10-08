@@ -16,17 +16,38 @@
           <p class="nav-auth-sub">Sign in to apply to jobs, manage applications, and more.</p>
         </header>
 
-        <form class="nav-auth-form" action="/auth/login" method="post">
+        <form class="nav-auth-form" id="login-form" action="/auth/login" method="post">
           <label class="nav-auth-label">
             <span class="nav-auth-label-text">Email</span>
-            <input type="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+            <input type="email" id="login-email" name="email" placeholder="you@example.com" required autocomplete="email" />
           </label>
           <label class="nav-auth-label">
             <span class="nav-auth-label-text">Password</span>
-            <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+            <input type="password" id="login-password" name="password" placeholder="••••••••" required autocomplete="current-password" />
           </label>
           <button type="submit" class="nav-auth-submit">Sign in</button>
         </form>
+
+        <div class="demo-access-box">
+          <div class="demo-access-header">
+            <span class="demo-badge">Quick Demo Access</span>
+            <small>Click to sign in instantly:</small>
+          </div>
+          <div class="demo-buttons-grid">
+            <button type="button" class="demo-btn demo-btn--candidate" data-email="candidate@worklix.com" data-pass="password123">
+              <span class="demo-btn-role">Candidate</span>
+              <span class="demo-btn-hint">Browse & Apply</span>
+            </button>
+            <button type="button" class="demo-btn demo-btn--recruiter" data-email="recruiter@worklix.com" data-pass="password123">
+              <span class="demo-btn-role">Recruiter</span>
+              <span class="demo-btn-hint">Post & Review</span>
+            </button>
+            <button type="button" class="demo-btn demo-btn--admin" data-email="admin@worklix.com" data-pass="password123">
+              <span class="demo-btn-role">Admin</span>
+              <span class="demo-btn-hint">Manage All</span>
+            </button>
+          </div>
+        </div>
 
         <div class="nav-auth-footer">
           <span class="nav-auth-muted">New to Worklix?</span>
@@ -37,5 +58,22 @@
   </section>
 
   <%- include("partials/footer") %>
+
+  <script>
+    document.querySelectorAll(".demo-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var email = this.getAttribute("data-email");
+        var pass = this.getAttribute("data-pass");
+        var emailInput = document.getElementById("login-email");
+        var passInput = document.getElementById("login-password");
+        var form = document.getElementById("login-form");
+        if (emailInput && passInput && form) {
+          emailInput.value = email;
+          passInput.value = pass;
+          form.submit();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
